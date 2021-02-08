@@ -1,0 +1,97 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+scale   0.1;
+
+vertices
+(
+    (0 0 0) // point 0
+    (1 0 0) // point 1
+    (1 1 0) // point 2
+    (0 1 0) // point 3
+    (0 0 0.1) // point 4
+    (1 0 0.1) // point 5
+    (1 1 0.1) // point 6
+    (0 1 0.1) // point 7
+
+
+
+// here are our new vertices
+    (6 0 0) // point 8
+    (6 1 0) // point 9
+    (6 0 0.1) // point 10
+    (6 1 0.1) // point 11
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (20 20 1) simpleGrading (0.2 5 1) // first block
+    hex (1 8 9 2 5 10 11 6) (100 20 1) simpleGrading (5 5 1) // second block
+);
+
+edges
+(
+);
+
+boundary
+(
+   
+   zeroGradientPlanes
+   { 
+      type patch;
+      faces
+      (
+         (1 5 4 0) // bottom left side
+         (8 9 11 10) // left side outlet
+          (3 7 6 2) // x=0 and x=1
+         (2 6 11 9) // x=1 and x=2
+      );
+   }
+    
+   inlet
+    {
+        type patch;
+        faces
+        (
+            (0 4 7 3) // left side
+        );
+    }
+   plate
+   {
+        type wall;
+        faces
+       (
+            (1 8 10 5) // right side
+        );
+    }
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            (0 3 2 1) // z coordinate = 0
+            (1 2 9 8) // z coordinate = 0
+            (4 5 6 7) // z coordinate = 0.1 
+            (5 10 11 6) // z coordinate = 0.1
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //
